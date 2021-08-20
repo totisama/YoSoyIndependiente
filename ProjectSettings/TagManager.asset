@@ -4,9 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Fire
   - fondo
-  - basura
+  - ObjetoMovible
+  - Deposito
+  - Cama
   layers:
   - Default
   - TransparentFX
