@@ -8,6 +8,9 @@ TagManager:
   - ObjetoMovible
   - Deposito
   - Cama
+  - HerramientaLimpieza
+  - Polvo
+  - Cubeta
   layers:
   - Default
   - TransparentFX
