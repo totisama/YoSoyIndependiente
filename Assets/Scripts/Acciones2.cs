@@ -21,25 +21,38 @@ public class Acciones2 : MonoBehaviour
     public Button moveIzquierda;
     public Button moveDerecha;
     public GameObject canvasFinalMenuUi;
-    private float rayDist = 1;
-    private int puntosCama;
+    private float rayDist = 1.3f;
+    private int puntosBarrer;
+    private int puntosTrapear;
     private int puntosBasura;
     private string txt = "Agarrar";
     private bool holding;
     private bool buttonPressedGeneral;
     private bool buttonPressedAccion;
     private bool chocaDeposito;
-    private bool polvosTerminados;
+    private bool barrerTerminado;
+    private bool trapearTerminado;
     private bool basurasTerminadas;
     private bool trapeadorMojado;
+    private bool termino;
     private RaycastHit2D check;
     private GameObject player;
     private Text buttonAccionText;
     private Polvo polvoScript;
     private string herramientaActual;
+    public AudioSource[] arraySonidos;
+    private AudioSource MyAudioSource;
 
+    private void Awake()
+    {
+        Time.timeScale = 1f;
+        buttonGeneral.interactable = true;
+        moveIzquierda.interactable = true;
+        moveDerecha.interactable = true;
+    }
     private void Start()
     {
+        MyAudioSource = GetComponent<AudioSource>();
         player = GameObject.FindGameObjectWithTag("Player");
         buttonAccion.interactable = false;
         buttonAccionText = buttonAccion.GetComponentInChildren<Text>();
@@ -51,7 +64,7 @@ public class Acciones2 : MonoBehaviour
 
     void Update()
     {
-        if (!polvosTerminados || !basurasTerminadas)
+        if (!barrerTerminado || !trapearTerminado || !basurasTerminadas)
         {
             check = Physics2D.Raycast(grabDetect.position, Vector2.right * transform.localScale, rayDist);
             //Debug.Log(check.collider.tag);
@@ -65,6 +78,7 @@ public class Acciones2 : MonoBehaviour
                         // Agarrar objectos
                         if (buttonPressedGeneral)
                         {
+                            arraySonidos[2].Play();
                             GameObject gameObj = check.collider.gameObject;
                             gameObj.transform.parent = holder;
                             gameObj.transform.position = holder.position;
@@ -85,8 +99,8 @@ public class Acciones2 : MonoBehaviour
                         GameObject obj = holder.GetChild(0).gameObject;
                         if (obj.CompareTag("HerramientaLimpieza"))
                         {
-                            SpriteRenderer sprite = obj.GetComponentInChildren<SpriteRenderer>();
-                            sprite.sortingOrder = 5;
+                            //SpriteRenderer sprite = obj.GetComponentInChildren<SpriteRenderer>();
+                            //sprite.sortingOrder = 5;
                             string stringButton = "Acción";
                             if (check.collider.CompareTag("Polvo"))
                             {
@@ -99,10 +113,22 @@ public class Acciones2 : MonoBehaviour
                                     stringButton = "Barrer";
                                     if (buttonPressedAccion)
                                     {
+                                        arraySonidos[0].Play();
                                         stringButton = "Acción";
                                         polvoScript.CambioSprite(herramientaActual);
                                         buttonAccion.interactable = false;
                                         buttonPressedAccion = false;
+                                        puntosBarrer += 1;
+                                        misionPolvoText.text = "Barre los 2 polvos (" + puntosBarrer + "/2)";
+                                        if (puntosBarrer == 2)
+                                        {
+                                            polvoTogg.isOn = true;
+                                            Image fondo = polvoTogg.GetComponentInChildren<Image>();
+                                            fondo.color = Color.green;
+                                            MyAudioSource.Stop();
+                                            arraySonidos[4].Play();
+                                            barrerTerminado = true;
+                                        }
                                     }
                                 } else if (etapa == 1 && herramientaActual == "Trapeador")
                                 {
@@ -112,20 +138,33 @@ public class Acciones2 : MonoBehaviour
                                         stringButton = "Trapear";
                                         if (buttonPressedAccion)
                                         {
+                                            arraySonidos[0].Play();
                                             stringButton = "Acción";
                                             polvoScript.CambioSprite(herramientaActual);
                                             buttonAccion.interactable = false;
                                             buttonPressedAccion = false;
                                             trapeadorMojado = false;
+                                            puntosTrapear += 1;
+                                            misionManchaText.text = "Moja el trapeador y trapea las 2 manchas (" + puntosTrapear + "/2)";
+                                            if (puntosTrapear == 2)
+                                            {
+                                                manchasTogg.isOn = true;
+                                                Image fondo = manchasTogg.GetComponentInChildren<Image>();
+                                                fondo.color = Color.green;
+                                                MyAudioSource.Stop();
+                                                arraySonidos[4].Play();
+                                                trapearTerminado = true;
+                                            }
                                         }   
                                     }
                                 }
-                            } else if(check.collider.CompareTag("Cubeta"))
+                            } else if(check.collider.CompareTag("Cubeta") && herramientaActual == "Trapeador")
                             {
                                 buttonAccion.interactable = true;
                                 stringButton = "Mojar";
                                 if (buttonPressedAccion)
                                 {
+                                    arraySonidos[1].Play();
                                     MojarTrapeador();
                                     buttonPressedAccion = false;
                                     //Llamar funcion de trapeador para cambiar sprite
@@ -140,35 +179,6 @@ public class Acciones2 : MonoBehaviour
                         }
                     }
                 }
-                /*
-                else if (check.collider.CompareTag("Cama"))
-                {
-                    if (!camaTerminada)
-                    {
-                        if (!holding)
-                        {
-                            buttonAccion.interactable = true;
-                            string stringButton = "Hacer cama";
-                            if (buttonPressedAccion)
-                            {
-                                buttonPressedAccion = false;
-                                camaTerminada = camaScript.CambioSprite();
-                                puntosCama += 1;
-                                camaTogg.isOn = camaTerminada;
-                                misionCamaText.text = "Has la cama (" + puntosCama + "/3)";
-                            }
-
-                            buttonAccionText.text = stringButton;
-                        }
-                    }
-                    else
-                    {
-                        buttonAccion.interactable = false;
-                        buttonPressedAccion = false;
-                        buttonAccionText.text = "Acción";
-                    }
-                }
-                */
             }
             else
             {
@@ -187,6 +197,7 @@ public class Acciones2 : MonoBehaviour
                         string stringButton = "Tirar";
                         if (buttonPressedAccion)
                         {
+                            arraySonidos[3].Play();
                             SumarPuntosBasura();
                             stringButton = "Acción";
                             txt = "Agarrar";
@@ -195,7 +206,6 @@ public class Acciones2 : MonoBehaviour
                             buttonPressedAccion = false;
                             Destroy(obj);
                         }
-
                         buttonAccionText.text = stringButton;
                     }
                 }
@@ -216,6 +226,7 @@ public class Acciones2 : MonoBehaviour
                 {
                     obj.transform.position = grabDetect.position;    
                 }
+                arraySonidos[9].Play();
                 obj.transform.parent = null;
                 obj.GetComponent<Rigidbody2D>().isKinematic = false;
                 buttonPressedGeneral = false;
@@ -224,13 +235,16 @@ public class Acciones2 : MonoBehaviour
             }
             buttonTxtGeneral.text = txt;
         }
-        else
+        else if (!termino && barrerTerminado && trapearTerminado && basurasTerminadas)
         {
             canvasFinalMenuUi.SetActive(true);
             Time.timeScale = 0f;
             buttonGeneral.interactable = false;
             moveIzquierda.interactable = false;
             moveDerecha.interactable = false;
+            MyAudioSource.Stop();
+            arraySonidos[8].Play();
+            termino = true;
         }
     }
 
@@ -290,6 +304,10 @@ public class Acciones2 : MonoBehaviour
         {
             basurasTerminadas = true;
             basurasTogg.isOn = basurasTerminadas;
+            Image fondo = basurasTogg.GetComponentInChildren<Image>();
+            fondo.color = Color.green;
+            MyAudioSource.Stop();
+            arraySonidos[4].Play();
         }
     }
 

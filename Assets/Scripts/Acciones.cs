@@ -17,7 +17,7 @@ public class Acciones : MonoBehaviour
     public Button moveIzquierda;
     public Button moveDerecha;
     public GameObject canvasFinalMenuUi;
-    private float rayDist = 1;
+    private float rayDist = 1.3f;
     private int puntosCama;
     private int puntosCamisas;
     private string txt = "Agarrar";
@@ -26,7 +26,8 @@ public class Acciones : MonoBehaviour
     private bool buttonPressedAccion;
     private bool chocaDeposito;
     private bool camaTerminada;
-    private bool camisasTerminadas;
+    private bool ropaTerminada;
+    private bool termino;
     public Toggle camaTogg;
     public Toggle camisasTogg;
     private RaycastHit2D check;
@@ -34,22 +35,33 @@ public class Acciones : MonoBehaviour
     private GameObject cama;
     private Text buttonAccionText;
     private Cama camaScript;
+    public AudioSource[] arraySonidos;
+    private AudioSource MyAudioSource;
+
+    private void Awake()
+    {
+        Time.timeScale = 1f;
+        buttonGeneral.interactable = true;
+        moveIzquierda.interactable = true;
+        moveDerecha.interactable = true;
+    }
 
     private void Start()
     {
+        MyAudioSource = GetComponent<AudioSource>();
         player = GameObject.FindGameObjectWithTag("Player");
         buttonAccion.interactable = false;
         buttonAccionText = buttonAccion.GetComponentInChildren<Text>();
         cama = GameObject.FindGameObjectWithTag("Cama");
         camaScript = cama.GetComponent<Cama>();
         canvasFinalMenuUi.SetActive(false);
-        misionCamisasText.text = "Mete las camisas en la ropa sucia. (0/3)";
+        misionCamisasText.text = "Mete la ropa en la ropa sucia. (0/3)";
         misionCamaText.text = "Has la cama (0/3)";
     }
 
     void Update()
     {
-        if (!camaTerminada || !camisasTerminadas)
+        if (!camaTerminada || !ropaTerminada)
         {
             check = Physics2D.Raycast(grabDetect.position, Vector2.right * transform.localScale, rayDist);
 
@@ -61,6 +73,7 @@ public class Acciones : MonoBehaviour
                     {
                         if (buttonPressedGeneral)
                         {
+                            arraySonidos[2].Play();
                             GameObject gameObj = check.collider.gameObject;
                             gameObj.transform.parent = holder;
                             gameObj.transform.position = holder.position;
@@ -81,13 +94,19 @@ public class Acciones : MonoBehaviour
                             string stringButton = "Hacer cama";
                             if (buttonPressedAccion)
                             {
+                                arraySonidos[7].Play();
                                 buttonPressedAccion = false;
                                 camaTerminada = camaScript.CambioSprite();
                                 puntosCama += 1;
                                 camaTogg.isOn = camaTerminada;
+                                if (camaTerminada)
+                                {
+                                    Image fondo = camaTogg.GetComponentInChildren<Image>();
+                                    fondo.color = Color.green;
+                                    arraySonidos[4].Play();
+                                }
                                 misionCamaText.text = "Has la cama (" + puntosCama + "/3)";
                             }
-
                             buttonAccionText.text = stringButton;
                         }
                     }
@@ -113,6 +132,7 @@ public class Acciones : MonoBehaviour
                     string stringButton = "Depositar";
                     if (buttonPressedAccion)
                     {
+                        arraySonidos[6].Play();
                         SumarPuntosCamisa();
                         stringButton = "Acción";
                         txt = "Agarrar";
@@ -122,13 +142,13 @@ public class Acciones : MonoBehaviour
                         GameObject obj = holder.GetChild(0).gameObject;
                         Destroy(obj);
                     }
-
                     buttonAccionText.text = stringButton;
                 }
             }
 
             if (holding && buttonPressedGeneral)
             {
+                arraySonidos[9].Play();
                 ObjetoMovible obj = player.GetComponentInChildren<ObjetoMovible>();
                 obj.transform.position = grabDetect.position;
                 obj.transform.parent = null;
@@ -139,22 +159,36 @@ public class Acciones : MonoBehaviour
             }
             buttonTxtGeneral.text = txt;
         }
-        else
+        else if (!termino && camaTerminada && ropaTerminada)
         {
             canvasFinalMenuUi.SetActive(true);
             Time.timeScale = 0f;
             buttonGeneral.interactable = false;
             moveIzquierda.interactable = false;
             moveDerecha.interactable = false;
+            MyAudioSource.Stop();
+            arraySonidos[8].Play();
+            termino = true;
         }
     }
 
     public void PresionarBotonGeneral()
     {
-        if (check.collider != null && !holding || holding && !check.collider.CompareTag("Cama"))
+        if (check.collider != null)
+        {
+            if (check.collider.CompareTag("ObjetoMovible"))
+            {
+                buttonPressedGeneral = true;
+            }
+            else if(holding)
+            {
+                buttonPressedGeneral = true;
+            }
+        } else if (holding)
         {
             buttonPressedGeneral = true;
         }
+        
     }
     
     public void PresionarBotonAccion()
@@ -194,8 +228,11 @@ public class Acciones : MonoBehaviour
         misionCamisasText.text = "Mete las camisas en la ropa sucia. ("+ puntosCamisas + "/3)";
         if (puntosCamisas >= 3)
         {
-            camisasTerminadas = true;
-            camisasTogg.isOn = camisasTerminadas;
+            ropaTerminada = true;
+            camisasTogg.isOn = ropaTerminada;
+            Image fondo =  camisasTogg.GetComponentInChildren<Image>();
+            fondo.color = Color.green;
+            arraySonidos[4].Play();
         }
     }
 }

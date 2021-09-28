@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelUserStore">
-    <attachedFolders />
+    <attachedFolders>
+      <Path>../../../../../../Library/Unity/cache/packages/packages.unity.com/com.unity.mathematics@1.1.0</Path>
+    </attachedFolders>
     <explicitIncludes>
       <Path>../../../../../../Library/Unity/cache/packages/packages.unity.com/com.unity.mathematics@1.1.0</Path>
       <Path>Library/PackageCache/com.unity.2d.animation@6.0.3</Path>
@@ -67,6 +69,7 @@
       <Path>Build</Path>
       <Path>Library</Path>
       <Path>Logs</Path>
+      <Path>Temp</Path>
       <Path>UserSettings</Path>
       <Path>obj</Path>
     </explicitExcludes>
