@@ -11,6 +11,12 @@ TagManager:
   - HerramientaLimpieza
   - Polvo
   - Cubeta
+  - Plato
+  - Mantel
+  - Cuchara
+  - Tenedor
+  - Cuchillo
+  - Vaso
   layers:
   - Default
   - TransparentFX

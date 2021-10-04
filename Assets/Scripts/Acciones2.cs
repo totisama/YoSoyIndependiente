@@ -39,12 +39,15 @@ public class Acciones2 : MonoBehaviour
     private GameObject player;
     private Text buttonAccionText;
     private Polvo polvoScript;
+    private Trapeador trapeadorScript;
     private string herramientaActual;
     public AudioSource[] arraySonidos;
     private AudioSource MyAudioSource;
+    public Canvas canvasPausa;
 
     private void Awake()
     {
+        canvasPausa.enabled = false;
         Time.timeScale = 1f;
         buttonGeneral.interactable = true;
         moveIzquierda.interactable = true;
@@ -113,7 +116,6 @@ public class Acciones2 : MonoBehaviour
                                     stringButton = "Barrer";
                                     if (buttonPressedAccion)
                                     {
-                                        arraySonidos[0].Play();
                                         stringButton = "Acción";
                                         polvoScript.CambioSprite(herramientaActual);
                                         buttonAccion.interactable = false;
@@ -129,6 +131,10 @@ public class Acciones2 : MonoBehaviour
                                             arraySonidos[4].Play();
                                             barrerTerminado = true;
                                         }
+                                        else
+                                        {
+                                            arraySonidos[0].Play();
+                                        }
                                     }
                                 } else if (etapa == 1 && herramientaActual == "Trapeador")
                                 {
@@ -138,7 +144,6 @@ public class Acciones2 : MonoBehaviour
                                         stringButton = "Trapear";
                                         if (buttonPressedAccion)
                                         {
-                                            arraySonidos[0].Play();
                                             stringButton = "Acción";
                                             polvoScript.CambioSprite(herramientaActual);
                                             buttonAccion.interactable = false;
@@ -146,6 +151,8 @@ public class Acciones2 : MonoBehaviour
                                             trapeadorMojado = false;
                                             puntosTrapear += 1;
                                             misionManchaText.text = "Moja el trapeador y trapea las 2 manchas (" + puntosTrapear + "/2)";
+                                            trapeadorScript = holder.GetComponentInChildren<Trapeador>();
+                                            trapeadorScript.CambioSprite(0);
                                             if (puntosTrapear == 2)
                                             {
                                                 manchasTogg.isOn = true;
@@ -154,6 +161,10 @@ public class Acciones2 : MonoBehaviour
                                                 MyAudioSource.Stop();
                                                 arraySonidos[4].Play();
                                                 trapearTerminado = true;
+                                            }
+                                            else
+                                            {
+                                                arraySonidos[0].Play();
                                             }
                                         }   
                                     }
@@ -167,7 +178,8 @@ public class Acciones2 : MonoBehaviour
                                     arraySonidos[1].Play();
                                     MojarTrapeador();
                                     buttonPressedAccion = false;
-                                    //Llamar funcion de trapeador para cambiar sprite
+                                    trapeadorScript = holder.GetComponentInChildren<Trapeador>();
+                                    trapeadorScript.CambioSprite(1);
                                 }
                             }
                             else
@@ -197,7 +209,6 @@ public class Acciones2 : MonoBehaviour
                         string stringButton = "Tirar";
                         if (buttonPressedAccion)
                         {
-                            arraySonidos[3].Play();
                             SumarPuntosBasura();
                             stringButton = "Acción";
                             txt = "Agarrar";
@@ -308,6 +319,10 @@ public class Acciones2 : MonoBehaviour
             fondo.color = Color.green;
             MyAudioSource.Stop();
             arraySonidos[4].Play();
+        }
+        else
+        {
+            arraySonidos[3].Play();
         }
     }
 

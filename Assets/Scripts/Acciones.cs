@@ -37,9 +37,11 @@ public class Acciones : MonoBehaviour
     private Cama camaScript;
     public AudioSource[] arraySonidos;
     private AudioSource MyAudioSource;
+    public Canvas canvasPausa;
 
     private void Awake()
     {
+        canvasPausa.enabled = false;
         Time.timeScale = 1f;
         buttonGeneral.interactable = true;
         moveIzquierda.interactable = true;
@@ -94,7 +96,6 @@ public class Acciones : MonoBehaviour
                             string stringButton = "Hacer cama";
                             if (buttonPressedAccion)
                             {
-                                arraySonidos[7].Play();
                                 buttonPressedAccion = false;
                                 camaTerminada = camaScript.CambioSprite();
                                 puntosCama += 1;
@@ -104,6 +105,10 @@ public class Acciones : MonoBehaviour
                                     Image fondo = camaTogg.GetComponentInChildren<Image>();
                                     fondo.color = Color.green;
                                     arraySonidos[4].Play();
+                                }
+                                else
+                                {
+                                    arraySonidos[7].Play();
                                 }
                                 misionCamaText.text = "Has la cama (" + puntosCama + "/3)";
                             }
@@ -132,7 +137,6 @@ public class Acciones : MonoBehaviour
                     string stringButton = "Depositar";
                     if (buttonPressedAccion)
                     {
-                        arraySonidos[6].Play();
                         SumarPuntosCamisa();
                         stringButton = "Acción";
                         txt = "Agarrar";
@@ -233,6 +237,10 @@ public class Acciones : MonoBehaviour
             Image fondo =  camisasTogg.GetComponentInChildren<Image>();
             fondo.color = Color.green;
             arraySonidos[4].Play();
+        }
+        else
+        {
+            arraySonidos[6].Play();
         }
     }
 }
