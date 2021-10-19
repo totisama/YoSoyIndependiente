@@ -61,7 +61,7 @@ public class Acciones2 : MonoBehaviour
         buttonAccionText = buttonAccion.GetComponentInChildren<Text>();
         canvasFinalMenuUi.SetActive(false);
         misionBasurasText.text = "Mete la basura en el basurero. (0/3)";
-        misionPolvoText.text = "Barre los 2 polvos (0/2)";
+        misionPolvoText.text = "Barre los 2 volcanes de polvo (0/2)";
         misionManchaText.text = "Moja el trapeador y trapea las 2 manchas (0/2)";
     }
 
@@ -102,8 +102,6 @@ public class Acciones2 : MonoBehaviour
                         GameObject obj = holder.GetChild(0).gameObject;
                         if (obj.CompareTag("HerramientaLimpieza"))
                         {
-                            //SpriteRenderer sprite = obj.GetComponentInChildren<SpriteRenderer>();
-                            //sprite.sortingOrder = 5;
                             string stringButton = "Acción";
                             if (check.collider.CompareTag("Polvo"))
                             {
@@ -121,7 +119,7 @@ public class Acciones2 : MonoBehaviour
                                         buttonAccion.interactable = false;
                                         buttonPressedAccion = false;
                                         puntosBarrer += 1;
-                                        misionPolvoText.text = "Barre los 2 polvos (" + puntosBarrer + "/2)";
+                                        misionPolvoText.text = "Barre los 2 volcanes de polvo (" + puntosBarrer + "/2)";
                                         if (puntosBarrer == 2)
                                         {
                                             polvoTogg.isOn = true;
@@ -164,22 +162,26 @@ public class Acciones2 : MonoBehaviour
                                             }
                                             else
                                             {
-                                                arraySonidos[0].Play();
+                                                arraySonidos[10].Play();
                                             }
                                         }   
                                     }
                                 }
                             } else if(check.collider.CompareTag("Cubeta") && herramientaActual == "Trapeador")
                             {
-                                buttonAccion.interactable = true;
-                                stringButton = "Mojar";
-                                if (buttonPressedAccion)
+                                if (!trapeadorMojado)
                                 {
-                                    arraySonidos[1].Play();
-                                    MojarTrapeador();
-                                    buttonPressedAccion = false;
-                                    trapeadorScript = holder.GetComponentInChildren<Trapeador>();
-                                    trapeadorScript.CambioSprite(1);
+                                    buttonAccion.interactable = true;
+                                    stringButton = "Mojar";
+                                    if (buttonPressedAccion)
+                                    {
+                                        arraySonidos[1].Play();
+                                        trapeadorMojado = true;
+                                        buttonPressedAccion = false;
+                                        trapeadorScript = holder.GetComponentInChildren<Trapeador>();
+                                        trapeadorScript.CambioSprite(1);
+                                        buttonAccion.interactable = false;
+                                    }
                                 }
                             }
                             else
@@ -324,10 +326,5 @@ public class Acciones2 : MonoBehaviour
         {
             arraySonidos[3].Play();
         }
-    }
-
-    void MojarTrapeador()
-    {
-        trapeadorMojado = true;
     }
 }

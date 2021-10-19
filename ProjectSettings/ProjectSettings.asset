@@ -148,7 +148,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.RodrigoS.YoSoyIndependiente
     Lumin: com.DefaultCompany.com.unity.template.mobile2D
-    Standalone: com.DefaultCompany.com.unity.template.mobile2D
+    Standalone: com.RodrigoS.YoSoyIndependiente
     iPhone: com.DefaultCompany.com.unity.template.mobile2D
     tvOS: com.DefaultCompany.com.unity.template.mobile2D
   buildNumber:

@@ -229,7 +229,7 @@ public class Acciones : MonoBehaviour
     void SumarPuntosCamisa()
     {
         puntosCamisas += 1;
-        misionCamisasText.text = "Mete las camisas en la ropa sucia. ("+ puntosCamisas + "/3)";
+        misionCamisasText.text = "Mete la ropa en la ropa sucia. ("+ puntosCamisas + "/3)";
         if (puntosCamisas >= 3)
         {
             ropaTerminada = true;
