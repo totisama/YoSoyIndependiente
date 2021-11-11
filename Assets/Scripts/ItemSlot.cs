@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Image = UnityEngine.UI.Image;
 
 public class ItemSlot : MonoBehaviour, IDropHandler
 {
@@ -32,6 +34,12 @@ public class ItemSlot : MonoBehaviour, IDropHandler
                 if (eventData.pointerDrag.CompareTag("Mantel"))
                 {
                     rest = true;
+                }
+
+                if (gameObject.GetComponent<Image>())
+                {
+                    Image i = gameObject.GetComponent<Image>();
+                    i.canvasRenderer.SetAlpha(0.0f);
                 }
             }
         }

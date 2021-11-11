@@ -88,7 +88,7 @@ public class MainLvl3 : MonoBehaviour
                     individual2.colocado = false;
                 }
 
-                individualTxt.text = "Coloca los 2 individuales en su lugar (" + contIndividual + "/2)";
+                individualTxt.text = "(" + contIndividual + "/2)";
                 if (contIndividual == 2)
                 {
                     Image fondo = individualTogg.GetComponentInChildren<Image>();
@@ -113,7 +113,7 @@ public class MainLvl3 : MonoBehaviour
                     vaso2.colocado = false;
                 }
 
-                vasoTxt.text = "Coloca los 2 vasos en su lugar (" + contVaso + "/2)";
+                vasoTxt.text = "(" + contVaso + "/2)";
                 if (contVaso == 2)
                 {
                     Image fondo = vasoTogg.GetComponentInChildren<Image>();
@@ -138,7 +138,7 @@ public class MainLvl3 : MonoBehaviour
                     cuchara2.colocado = false;
                 }
 
-                cucharaTxt.text = "Coloca las 2 cucharas en su lugar (" + contCuchara + "/2)";
+                cucharaTxt.text = "(" + contCuchara + "/2)";
                 if (contCuchara == 2)
                 {
                     Image fondo = cucharaTogg.GetComponentInChildren<Image>();
@@ -163,7 +163,7 @@ public class MainLvl3 : MonoBehaviour
                     tenedor2.colocado = false;
                 }
 
-                tenedorTxt.text = "Coloca los 2 tenedores en su lugar (" + contTenedor + "/2)";
+                tenedorTxt.text = "(" + contTenedor + "/2)";
                 if (contTenedor == 2)
                 {
                     Image fondo = tenedorTogg.GetComponentInChildren<Image>();
@@ -188,7 +188,7 @@ public class MainLvl3 : MonoBehaviour
                     cuchillo2.colocado = false;
                 }
 
-                cuchillolTxt.text = "Coloca los 2 cuchillos en su lugar (" + contCuchillo + "/2)";
+                cuchillolTxt.text = "(" + contCuchillo + "/2)";
                 if (contCuchillo == 2)
                 {
                     Image fondo = cuchilloTogg.GetComponentInChildren<Image>();
@@ -213,7 +213,7 @@ public class MainLvl3 : MonoBehaviour
                     plato2.colocado = false;
                 }
 
-                platoTxt.text = "Coloca los 2 platos en su lugar (" + contPlato + "/2)";
+                platoTxt.text = "(" + contPlato + "/2)";
                 if (contPlato == 2)
                 {
                     Image fondo = platoTogg.GetComponentInChildren<Image>();

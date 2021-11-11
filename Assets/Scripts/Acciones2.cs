@@ -60,9 +60,9 @@ public class Acciones2 : MonoBehaviour
         buttonAccion.interactable = false;
         buttonAccionText = buttonAccion.GetComponentInChildren<Text>();
         canvasFinalMenuUi.SetActive(false);
-        misionBasurasText.text = "Mete la basura en el basurero. (0/3)";
-        misionPolvoText.text = "Barre los 2 volcanes de polvo (0/2)";
-        misionManchaText.text = "Moja el trapeador y trapea las 2 manchas (0/2)";
+        misionBasurasText.text = "(0/3)";
+        misionPolvoText.text = "(0/2)";
+        misionManchaText.text = "(0/2)";
     }
 
     void Update()
@@ -81,21 +81,44 @@ public class Acciones2 : MonoBehaviour
                         // Agarrar objectos
                         if (buttonPressedGeneral)
                         {
-                            arraySonidos[2].Play();
                             GameObject gameObj = check.collider.gameObject;
-                            gameObj.transform.parent = holder;
-                            gameObj.transform.position = holder.position;
-                            if (gameObj.GetComponent<Escoba>())
+                            if (basurasTerminadas && !barrerTerminado && gameObj.GetComponent<Escoba>())
                             {
+                                buttonGeneral.interactable = false;
+                                gameObj.transform.parent = holder;
+                                gameObj.transform.position = holder.position;
                                 herramientaActual = "Escoba";
-                            } else if (gameObj.GetComponent<Trapeador>())
+                                arraySonidos[2].Play();
+                                check.collider.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+                                holding = true;
+                                buttonPressedGeneral = false;
+                                txt = "Soltar";
+                            } else if (basurasTerminadas && barrerTerminado && !trapearTerminado && gameObj.GetComponent<Trapeador>())
                             {
-                                 herramientaActual = "Trapeador";
+                                buttonGeneral.interactable = false;
+                                arraySonidos[2].Play();
+                                check.collider.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+                                holding = true;
+                                buttonPressedGeneral = false;
+                                txt = "Soltar";
+                                gameObj.transform.parent = holder;
+                                gameObj.transform.position = holder.position;
+                                herramientaActual = "Trapeador";
                             }
-                            check.collider.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
-                            holding = true;
-                            buttonPressedGeneral = false;
-                            txt = "Soltar";
+                            else if (!gameObj.GetComponent<Escoba>() && !gameObj.GetComponent<Trapeador>())
+                            {
+                                gameObj.transform.parent = holder;
+                                gameObj.transform.position = holder.position;
+                                arraySonidos[2].Play();
+                                check.collider.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+                                holding = true;
+                                buttonPressedGeneral = false;
+                                txt = "Soltar";   
+                            }
+                            else
+                            {
+                                buttonPressedGeneral = false;
+                            }
                         }
                     } else if (holding)
                     {
@@ -119,7 +142,7 @@ public class Acciones2 : MonoBehaviour
                                         buttonAccion.interactable = false;
                                         buttonPressedAccion = false;
                                         puntosBarrer += 1;
-                                        misionPolvoText.text = "Barre los 2 volcanes de polvo (" + puntosBarrer + "/2)";
+                                        misionPolvoText.text = "(" + puntosBarrer + "/2)";
                                         if (puntosBarrer == 2)
                                         {
                                             polvoTogg.isOn = true;
@@ -128,6 +151,7 @@ public class Acciones2 : MonoBehaviour
                                             MyAudioSource.Stop();
                                             arraySonidos[4].Play();
                                             barrerTerminado = true;
+                                            buttonGeneral.interactable = true;
                                         }
                                         else
                                         {
@@ -148,7 +172,7 @@ public class Acciones2 : MonoBehaviour
                                             buttonPressedAccion = false;
                                             trapeadorMojado = false;
                                             puntosTrapear += 1;
-                                            misionManchaText.text = "Moja el trapeador y trapea las 2 manchas (" + puntosTrapear + "/2)";
+                                            misionManchaText.text = "(" + puntosTrapear + "/2)";
                                             trapeadorScript = holder.GetComponentInChildren<Trapeador>();
                                             trapeadorScript.CambioSprite(0);
                                             if (puntosTrapear == 2)
@@ -159,6 +183,7 @@ public class Acciones2 : MonoBehaviour
                                                 MyAudioSource.Stop();
                                                 arraySonidos[4].Play();
                                                 trapearTerminado = true;
+                                                buttonGeneral.interactable = true;
                                             }
                                             else
                                             {
@@ -217,6 +242,7 @@ public class Acciones2 : MonoBehaviour
                             buttonAccion.interactable = false;
                             holding = false;
                             buttonPressedAccion = false;
+                            buttonGeneral.interactable = true;
                             Destroy(obj);
                         }
                         buttonAccionText.text = stringButton;
@@ -225,26 +251,35 @@ public class Acciones2 : MonoBehaviour
             }
 
             // Condicion para soltar el objeto que se tenga en la mano
-            if (holding && buttonPressedGeneral)
+            if (holding)
             {
                 ObjetoMovible obj = player.GetComponentInChildren<ObjetoMovible>();
                 if (obj.CompareTag("HerramientaLimpieza"))
                 {
-                    Vector3 vector = grabDetect.position;
-                    vector.y = -1.40f;
-                    obj.transform.position = vector;
-                    herramientaActual = "";
+                    if (buttonPressedGeneral)
+                    {
+                        if (player.GetComponentInChildren<Escoba>())
+                        {
+                            if (basurasTerminadas && barrerTerminado)
+                            {
+                                Vector3 vector = grabDetect.position;
+                                vector.y = -1.45f;
+                                obj.transform.position = vector;
+                                herramientaActual = "";
+                                arraySonidos[9].Play();
+                                obj.transform.parent = null;
+                                obj.GetComponent<Rigidbody2D>().isKinematic = false;
+                                buttonPressedGeneral = false;
+                                holding = false;
+                                txt = "Agarrar";
+                            }   
+                        }
+                    }
                 }
                 else
                 {
-                    obj.transform.position = grabDetect.position;    
+                    buttonGeneral.interactable = false;
                 }
-                arraySonidos[9].Play();
-                obj.transform.parent = null;
-                obj.GetComponent<Rigidbody2D>().isKinematic = false;
-                buttonPressedGeneral = false;
-                holding = false;
-                txt = "Agarrar";
             }
             buttonTxtGeneral.text = txt;
         }
@@ -312,7 +347,7 @@ public class Acciones2 : MonoBehaviour
     void SumarPuntosBasura()
     {
         puntosBasura += 1;
-        misionBasurasText.text = "Mete la basura en el basurero. ("+ puntosBasura + "/3)";
+        misionBasurasText.text = "("+ puntosBasura + "/3)";
         if (puntosBasura >= 3)
         {
             basurasTerminadas = true;

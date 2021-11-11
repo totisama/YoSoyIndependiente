@@ -57,8 +57,8 @@ public class Acciones : MonoBehaviour
         cama = GameObject.FindGameObjectWithTag("Cama");
         camaScript = cama.GetComponent<Cama>();
         canvasFinalMenuUi.SetActive(false);
-        misionCamisasText.text = "Mete la ropa en la ropa sucia. (0/3)";
-        misionCamaText.text = "Has la cama (0/3)";
+        misionCamisasText.text = "(0/3)";
+        misionCamaText.text = "(0/3)";
     }
 
     void Update()
@@ -75,6 +75,7 @@ public class Acciones : MonoBehaviour
                     {
                         if (buttonPressedGeneral)
                         {
+                            buttonGeneral.interactable = false;
                             arraySonidos[2].Play();
                             GameObject gameObj = check.collider.gameObject;
                             gameObj.transform.parent = holder;
@@ -82,7 +83,7 @@ public class Acciones : MonoBehaviour
                             check.collider.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
                             holding = true;
                             buttonPressedGeneral = false;
-                            txt = "Soltar";
+                            //txt = "Soltar";
                         }
                     }
                 }
@@ -110,7 +111,7 @@ public class Acciones : MonoBehaviour
                                 {
                                     arraySonidos[7].Play();
                                 }
-                                misionCamaText.text = "Has la cama (" + puntosCama + "/3)";
+                                misionCamaText.text = "(" + puntosCama + "/3)";
                             }
                             buttonAccionText.text = stringButton;
                         }
@@ -137,6 +138,7 @@ public class Acciones : MonoBehaviour
                     string stringButton = "Depositar";
                     if (buttonPressedAccion)
                     {
+                        buttonGeneral.interactable = true;
                         SumarPuntosCamisa();
                         stringButton = "Acción";
                         txt = "Agarrar";
@@ -150,17 +152,17 @@ public class Acciones : MonoBehaviour
                 }
             }
 
-            if (holding && buttonPressedGeneral)
-            {
-                arraySonidos[9].Play();
-                ObjetoMovible obj = player.GetComponentInChildren<ObjetoMovible>();
-                obj.transform.position = grabDetect.position;
-                obj.transform.parent = null;
-                obj.GetComponent<Rigidbody2D>().isKinematic = false;
-                buttonPressedGeneral = false;
-                holding = false;
-                txt = "Agarrar";
-            }
+            //if (holding && buttonPressedGeneral)
+            //{
+            //    arraySonidos[9].Play();
+            //    ObjetoMovible obj = player.GetComponentInChildren<ObjetoMovible>();
+            //    obj.transform.position = grabDetect.position;
+            //   obj.transform.parent = null;
+            //    obj.GetComponent<Rigidbody2D>().isKinematic = false;
+            //    buttonPressedGeneral = false;
+            //    holding = false;
+            //    txt = "Agarrar";
+            //}
             buttonTxtGeneral.text = txt;
         }
         else if (!termino && camaTerminada && ropaTerminada)
@@ -229,7 +231,7 @@ public class Acciones : MonoBehaviour
     void SumarPuntosCamisa()
     {
         puntosCamisas += 1;
-        misionCamisasText.text = "Mete la ropa en la ropa sucia. ("+ puntosCamisas + "/3)";
+        misionCamisasText.text = "("+ puntosCamisas + "/3)";
         if (puntosCamisas >= 3)
         {
             ropaTerminada = true;
